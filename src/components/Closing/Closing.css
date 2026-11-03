@@ -1,0 +1,19 @@
+.closing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px 40px;
+  margin-top: clamp(64px, 8vw, 110px);
+  padding-top: 40px;
+  border-top: 1px solid var(--line);
+}
+
+.closing__line {
+  margin: 0;
+  max-width: 760px;
+  font-family: var(--serif);
+  font-size: clamp(32px, 3.8vw, 56px);
+  line-height: 1;
+}
+.closing__line em { font-style: italic; color: var(--teal); }

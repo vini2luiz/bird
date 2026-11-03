@@ -1,0 +1,39 @@
+.hero-copy__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 22px;
+  color: var(--ink-2);
+}
+.hero-copy__eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+
+.hero-copy__title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 5vw, 76px);
+  line-height: .95;
+  letter-spacing: -.012em;
+  color: var(--ink);
+}
+.hero-copy__title em { font-style: italic; color: var(--teal); }
+
+.hero-copy__lede {
+  margin: 22px 0 30px;
+  max-width: 400px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.hero-copy__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 26px;
+}

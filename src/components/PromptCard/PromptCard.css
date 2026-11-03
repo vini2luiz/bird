@@ -1,0 +1,86 @@
+.prompt-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.prompt-card {
+  padding: 12px 12px 14px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  color: var(--paper);
+  box-shadow: var(--shadow-deep);
+  border: 1px solid rgba(227, 232, 222, .06);
+}
+.prompt-card--drop { margin-top: 18px; }
+
+.prompt-card__head {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 4px 10px;
+  font-size: 9px;
+  color: var(--on-panel);
+}
+
+.prompt-card__thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 28% 30%, rgba(14, 124, 134, .95), transparent 58%),
+    radial-gradient(circle at 78% 78%, rgba(232, 115, 42, .85), transparent 55%),
+    var(--panel-2);
+}
+.prompt-card__thumb canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+.prompt-card__thumb canvas.is-drawn { opacity: 1; }
+.prompt-card__thumb::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(180deg, transparent, rgba(15, 29, 28, .88));
+  pointer-events: none;
+}
+
+.prompt-card__caption {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 9px;
+  z-index: 1;
+  font-size: 8.5px;
+  letter-spacing: .16em;
+  color: rgba(227, 232, 222, .82);
+}
+
+.prompt-card__stat {
+  margin: 14px 4px 10px;
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.1vw, 30px);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.prompt-card__dots { display: flex; gap: 6px; padding: 0 4px; }
+.prompt-card__dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(227, 232, 222, .22); }
+.prompt-card__dots i:first-child { background: var(--orange); }
+
+@media (max-width: 900px) {
+  .prompt-card--drop { margin-top: 0; }
+}
+
+@media (max-width: 520px) {
+  .prompt-card__stat { font-size: 21px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prompt-card__thumb canvas { transition: none; }
+}

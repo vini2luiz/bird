@@ -1,0 +1,39 @@
+/* Hero reveal: every UI element in the hero carries .rv; the hero gets .is-revealed when the bird lands.
+   Hiding is quick and unstaggered (for replay); showing is staggered by --d. */
+.rv {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(6px);
+  transition:
+    opacity .4s var(--ease),
+    transform .4s var(--ease),
+    filter .4s var(--ease);
+}
+.is-revealed .rv {
+  opacity: 1;
+  transform: none;
+  filter: none; /* `none`, not blur(0): a filtered ancestor would break the replay pill's backdrop-filter */
+  transition-duration: .9s;
+  transition-delay: calc(var(--d, 0) * 90ms);
+}
+
+/* Scroll reveal below the fold: .io gets .is-in from the IntersectionObserver, staggered by --i */
+.io {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .9s var(--ease), transform .9s var(--ease);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.io.is-in { opacity: 1; transform: none; }
+
+/* Self-drawing SVG paths: pathLength="1" lets one rule drive every curve */
+.draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.8s var(--ease) .35s;
+}
+.is-in .draw { stroke-dashoffset: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rv, .is-revealed .rv, .io, .draw { transition: none !important; }
+}

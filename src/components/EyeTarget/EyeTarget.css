@@ -1,0 +1,11 @@
+.eye-target { flex: none; width: 168px; height: 168px; }
+.eye-target__ring { transform-origin: 100px 100px; animation: eye-target-spin 28s linear infinite; }
+@keyframes eye-target-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 520px) {
+  .eye-target { width: 140px; height: 140px; align-self: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eye-target__ring { animation: none; }
+}

@@ -1,0 +1,24 @@
+/* Stylesheet entry point. Order matters: tokens → base → components → animations.
+   Plain @import keeps the project build-free; a bundler (e.g. Vite) would inline these. */
+
+@import url("./tokens.css");
+@import url("./base.css");
+
+@import url("../components/Button/Button.css");
+@import url("../components/Hero/Hero.css");
+@import url("../components/Nav/Nav.css");
+@import url("../components/HeroCopy/HeroCopy.css");
+@import url("../components/TrustRow/TrustRow.css");
+@import url("../components/PromptCard/PromptCard.css");
+@import url("../components/SpeciesStrip/SpeciesStrip.css");
+
+@import url("../components/FieldNotes/FieldNotes.css");
+@import url("../components/NoteCard/NoteCard.css");
+@import url("../components/DiveArc/DiveArc.css");
+@import url("../components/EyeTarget/EyeTarget.css");
+@import url("../components/Swatches/Swatches.css");
+@import url("../components/StatsBand/StatsBand.css");
+@import url("../components/Closing/Closing.css");
+@import url("../components/Footer/Footer.css");
+
+@import url("./animations.css");
