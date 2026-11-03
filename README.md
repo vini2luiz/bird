@@ -161,6 +161,12 @@ Se o vídeo vier de outro domínio, ele precisa enviar CORS. Sem CORS, a página
 
 ---
 
+## Deploy (Vercel)
+
+O [`vercel.json`](vercel.json) diz à Vercel que o build é `npm run build` e que o site sai em `dist/`. Sem ele, projetos sem framework detectado procuram uma pasta `public/` e o deploy falha com `STATIC_BUILD_NO_OUT_DIR`.
+
+O vídeo em `assets/media/` recebe cache de um ano (`immutable`). Ao trocar o arquivo, mude também o nome dele (ex.: `hero-v2.mp4`) e atualize `VIDEO_SRC`.
+
 ## Pendências conhecidas
 
 - **Formatos de vídeo mais leves (WebM / AV1):** exigem ffmpeg para transcodificar. Quando houver, gere os arquivos em `assets/media/` e troque o `src` do vídeo por elementos `<source>`. Atenção: com `<source>`, o evento `error` dispara no `<source>`, não no `<video>`, então ajuste o `onError` da coreografia.
