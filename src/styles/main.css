@@ -1,24 +1,34 @@
 /* Stylesheet entry point. Order matters: tokens → base → components → animations.
-   Plain @import keeps the project build-free; a bundler (e.g. Vite) would inline these. */
+   In development the browser follows these imports; `npm run build` inlines them into one file. */
 
-@import url("./tokens.css");
-@import url("./base.css");
+@import url('./tokens.css');
+@import url('./base.css');
 
-@import url("../components/Button/Button.css");
-@import url("../components/Hero/Hero.css");
-@import url("../components/Nav/Nav.css");
-@import url("../components/HeroCopy/HeroCopy.css");
-@import url("../components/TrustRow/TrustRow.css");
-@import url("../components/PromptCard/PromptCard.css");
-@import url("../components/SpeciesStrip/SpeciesStrip.css");
+@import url('../components/Button/Button.css');
+@import url('../components/Section/Section.css');
 
-@import url("../components/FieldNotes/FieldNotes.css");
-@import url("../components/NoteCard/NoteCard.css");
-@import url("../components/DiveArc/DiveArc.css");
-@import url("../components/EyeTarget/EyeTarget.css");
-@import url("../components/Swatches/Swatches.css");
-@import url("../components/StatsBand/StatsBand.css");
-@import url("../components/Closing/Closing.css");
-@import url("../components/Footer/Footer.css");
+@import url('../components/Hero/Hero.css');
+@import url('../components/Nav/Nav.css');
+@import url('../components/HeroCopy/HeroCopy.css');
+@import url('../components/TrustRow/TrustRow.css');
+@import url('../components/PromptCard/PromptCard.css');
+@import url('../components/SpeciesStrip/SpeciesStrip.css');
+@import url('../components/MediaToggle/MediaToggle.css');
 
-@import url("./animations.css");
+@import url('../components/FieldNotes/FieldNotes.css');
+@import url('../components/NoteCard/NoteCard.css');
+@import url('../components/DiveArc/DiveArc.css');
+@import url('../components/EyeTarget/EyeTarget.css');
+@import url('../components/Eyelid/Eyelid.css');
+@import url('../components/Swatches/Swatches.css');
+@import url('../components/StatsBand/StatsBand.css');
+
+@import url('../components/Templates/Templates.css');
+@import url('../components/Studios/Studios.css');
+@import url('../components/Pricing/Pricing.css');
+@import url('../components/Faq/Faq.css');
+@import url('../components/Closing/Closing.css');
+@import url('../components/Footer/Footer.css');
+@import url('../components/BuildModal/BuildModal.css');
+
+@import url('./animations.css');

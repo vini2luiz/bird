@@ -2,27 +2,42 @@
 
 Landing page de uma biblioteca fictícia de prompts cinematográficos. O hero é um vídeo de um martim-pescador que entra voando e pousa num galho; a interface se revela ao redor do pássaro no instante em que ele pousa.
 
-Sem framework, sem build step, sem dependências: HTML, CSS e JavaScript nativos (ES modules).
+O runtime não usa framework: é HTML, CSS e JavaScript nativos (ES modules). O build é um script Node de ~50 linhas, sem bundler, que pré-renderiza o HTML e junta o CSS.
 
 ---
 
-## Como rodar
+## Começando
 
-ES modules não carregam via `file://`, então sirva a pasta com qualquer servidor estático:
-
-```bash
-python -m http.server 8765
-```
-
-ou
+Requer Node 20.10+.
 
 ```bash
-npx serve .
+npm install
 ```
 
-Depois abra <http://localhost:8765>.
+```bash
+npm run dev
+```
 
-> Servir por HTTP também habilita a leitura de pixels do vídeo (o servidor do vídeo envia `Access-Control-Allow-Origin: *`), que é o que permite casar a cor da página com o fundo da filmagem.
+Abra <http://localhost:5173>.
+
+| Script            | O que faz                                                                  |
+| ----------------- | -------------------------------------------------------------------------- |
+| `npm run dev`     | Servidor estático com suporte a Range (para o vídeo), renderiza no cliente |
+| `npm run build`   | Gera `dist/`: HTML pré-renderizado + um único `app.css`                    |
+| `npm run preview` | Build + serve o `dist/`                                                    |
+| `npm test`        | Testes com `node:test`                                                     |
+| `npm run lint`    | ESLint                                                                     |
+| `npm run format`  | Prettier                                                                   |
+| `npm run check`   | Lint + checagem de formatação + testes (rode antes de commitar)            |
+
+> ES modules não carregam via `file://`; use sempre um servidor.
+
+### Desenvolvimento × produção
+
+- **Dev** (`index.html` na raiz): o `main.js` importa o `App` dinamicamente e renderiza no navegador. O CSS chega via `@import`.
+- **Produção** (`dist/`): `scripts/build.mjs` roda o mesmo `App()` no Node e grava o HTML dentro de `#app` com `data-prerendered`. O `main.js` detecta isso e só liga os controllers. Componentes e textos nem são baixados.
+
+O resultado são HTML real para SEO e primeira pintura, nenhuma cascata de `@import` e o mesmo código nos dois modos.
 
 ---
 
@@ -30,102 +45,98 @@ Depois abra <http://localhost:8765>.
 
 ```
 .
-├── index.html                  # Shell: <head>, fontes, #app e o entry point
-├── README.md
+├── index.html                    # Shell: <head>, fontes, #app e o entry point
+├── assets/media/hero.mp4         # Filmagem do hero, hospedada no projeto
+├── scripts/
+│   ├── serve.mjs                 # Servidor estático sem dependências (com Range)
+│   ├── build.mjs                 # Pré-render + bundle de CSS → dist/
+│   └── lib/bundle-css.mjs        # Resolve @import recursivamente
+├── test/                         # node:test — lib, App e bundler
 └── src/
-    ├── main.js                 # Entry point: renderiza o App e inicializa os controllers
-    ├── App.js                  # Composição da página (conteúdo → markup)
-    ├── config.js               # REVEAL_AT, URL do vídeo, timeouts, ponto de amostragem
-    │
-    ├── data/
-    │   └── content.js          # Todo o texto da página, separado do markup
-    │
-    ├── components/             # Componentes de apresentação: cada pasta = Nome.js + Nome.css
-    │   ├── Hero/               # Vídeo, palavra fantasma, véu e os "slots" do layout
-    │   ├── Nav/
-    │   ├── BirdMark/           # Logo SVG de dois tons
-    │   ├── Button/             # CtaButton, PillButton, UnderlineLink
-    │   ├── HeroCopy/           # Eyebrow, h1, lede e CTAs
-    │   ├── TrustRow/           # Avatares sobrepostos
-    │   ├── PromptCard/         # Cards escuros com thumbnail recortada do vídeo
-    │   ├── SpeciesStrip/       # Faixa inferior com o botão de replay
-    │   ├── FieldNotes/         # Seção "Why a Kingfisher"
-    │   ├── NoteCard/           # Notas do bento (variantes dark / light / wide)
-    │   ├── DiveArc/            # Arco do mergulho PERCH → ENTRY (SVG que se desenha)
-    │   ├── EyeTarget/          # Olho + mira (SVG)
-    │   ├── Swatches/           # Chips de cor
-    │   ├── StatsBand/          # Faixa de estatísticas com mini-visualizações
-    │   ├── Closing/            # Frase final + CTA
-    │   └── Footer/
-    │
-    ├── controllers/            # Comportamento (DOM, eventos, observers)
-    │   ├── heroChoreography.js # Play, amostragem de cor, reveal, fallbacks, replay
-    │   └── scrollReveal.js     # IntersectionObserver da seção abaixo da dobra
-    │
-    ├── lib/                    # Utilitários puros e reutilizáveis
-    │   ├── dom.js              # Template tag `html` e helper `cx`
-    │   ├── backdrop.js         # Lê 1px do vídeo e aplica --bg / --ghost
-    │   ├── thumbnails.js       # Recorta o frame do vídeo nos <canvas data-crop>
-    │   ├── video.js            # hasFrame()
-    │   └── motion.js           # prefersReducedMotion()
-    │
-    └── styles/
-        ├── main.css            # Entry point do CSS (@import na ordem certa)
-        ├── tokens.css          # Cores, fontes, easing, gutter, breakpoints
-        ├── base.css            # Reset e utilitários de tipografia (.mono, .serif, .wrap)
-        └── animations.css      # .rv (hero), .io (scroll), .draw (SVG)
+    ├── main.js                   # Entry point: (renderiza) + inicializa controllers
+    ├── App.js                    # Composição da página
+    ├── config.js                 # REVEAL_AT, vídeo, timeouts, silhueta
+    ├── data/content.js           # Todo o texto, separado do markup
+    ├── components/               # Nome.js + Nome.css por pasta
+    │   ├── Section/              # Cabeçalho padrão das seções (kicker, título, intro)
+    │   ├── Hero/  Nav/  HeroCopy/  TrustRow/  PromptCard/  SpeciesStrip/  MediaToggle/
+    │   ├── FieldNotes/  NoteCard/  DiveArc/  Swatches/  Eyelid/  EyeTarget/  StatsBand/
+    │   ├── Templates/            # Abas + visualizador de prompt com botão Copiar
+    │   ├── Studios/  Pricing/  Faq/  Closing/  Footer/
+    │   ├── BuildModal/           # "Watch a build" em <dialog>
+    │   └── Button/  BirdMark/
+    ├── controllers/              # Comportamento (DOM, eventos, observers)
+    │   ├── heroChoreography.js   # Play, cor, reveal, fallbacks, replay
+    │   ├── ghostWordMask.js      # Recorta a silhueta do pássaro da palavra
+    │   ├── mediaToggle.js        # Pause / Play / Replay
+    │   ├── scrollReveal.js       # IntersectionObserver abaixo da dobra
+    │   ├── tabs.js               # Abas WAI-ARIA (setas, Home, End)
+    │   ├── copyButtons.js        # Copiar com fallback e aviso em aria-live
+    │   └── dialogs.js            # <dialog> modal
+    ├── lib/                      # Funções puras e testáveis
+    │   ├── dom.js                # html``, cx(), escapeHtml()
+    │   ├── geometry.js           # Matemática do object-fit: cover
+    │   ├── silhouette.js         # Máscara alfa + dilatação
+    │   ├── backdrop.js           # Leitura de pixel, cor fantasma
+    │   ├── thumbnails.js         # Recortes do frame
+    │   ├── video.js  motion.js
+    └── styles/                   # tokens, base, animations, main (entry)
 ```
 
 ### Camadas e responsabilidades
 
-| Camada | Faz | Não faz |
-| --- | --- | --- |
-| `data/` | Guarda o conteúdo | Markup ou lógica |
-| `components/` | Funções puras `props → string HTML` + o CSS do próprio componente | Tocar no DOM ou ouvir eventos |
-| `controllers/` | Comportamento: eventos, timers, observers | Gerar markup |
-| `lib/` | Utilitários sem estado, testáveis isoladamente | Conhecer componentes específicos |
-| `config.js` | Valores ajustáveis | — |
+| Camada         | Faz                                                        | Não faz                     |
+| -------------- | ---------------------------------------------------------- | --------------------------- |
+| `data/`        | Guarda o conteúdo                                          | Markup ou lógica            |
+| `components/`  | Funções puras `props → HTML` + o CSS do próprio componente | Tocar no DOM, ouvir eventos |
+| `controllers/` | Comportamento: eventos, timers, observers                  | Gerar markup                |
+| `lib/`         | Utilitários puros, cobertos por testes                     | Conhecer componentes        |
+| `config.js`    | Valores ajustáveis                                         | —                           |
 
-Os controllers encontram os elementos por atributos `data-*` (`data-hero`, `data-hero-video`, `data-replay`, `data-crop`), nunca por classes de estilo. Assim, renomear uma classe CSS não quebra o comportamento.
-
-O CSS segue BEM (`bloco__elemento--modificador`) e cada componente só estiliza as próprias classes. Quem posiciona um componente é o pai, através de uma classe de *slot* passada via `className` (ex.: `hero__copy`, `hero__strip`).
+- **Ganchos de JS:** os controllers acham os elementos por `data-*`, nunca por classes de estilo.
+- **CSS:** segue BEM, e cada componente estiliza só as próprias classes. Quem posiciona é o pai, via uma classe de _slot_ passada em `className`.
+- **Texto:** `html` não escapa valores; campos `…Html` do conteúdo podem ter `<em>`. Qualquer outro texto que possa conter `<` ou `&` (como os prompts) passa por `escapeHtml`.
 
 ---
 
 ## Como o efeito funciona
 
-**A palavra atrás do pássaro.** "Kingfisher" fica *acima* do vídeo, com `mix-blend-mode: darken` e uma cor só um pouco mais escura que o fundo (`#ADBAA7` sobre `#B6C3B0`). Em cada pixel o navegador mantém o mais escuro dos dois. Como o pássaro é mais escuro que a palavra em todo lugar, ele vence e parece voar *na frente* do texto. Não há máscara recortada, canal alpha nem processamento por frame. Um `mask-image` dissolve a metade de baixo da palavra para os descendentes não colidirem com o galho.
+**A palavra atrás do pássaro.** "Kingfisher" fica _acima_ do vídeo, com `mix-blend-mode: darken` e uma cor um tom mais escura que o fundo. Em cada pixel o navegador mantém o mais escuro dos dois, canal por canal. O pássaro é mais escuro que a palavra em quase todo lugar, então parece voar na frente dela.
 
-**Cor da página = cor da filmagem.** No `loadeddata`, `lib/backdrop.js` desenha 1px do canto superior direito do vídeo (94% x, 12% y) num canvas 1×1, lê a cor e grava em `--bg`. `--ghost` recebe essa cor × 0.955. Se a leitura falhar (canvas "tainted" em `file://`), ficam os valores do CSS.
+**A exceção, e a correção.** A bochecha branca do pássaro é _mais clara_ que a palavra, então ali a palavra aparecia por cima dele. Depois do pouso, `ghostWordMask.js`:
 
-**Thumbnails dos cards.** São recortes do próprio vídeo. Quando o pássaro pousa, `lib/thumbnails.js` faz `drawImage` do frame em cada `<canvas data-crop="x,y,size">`:
+1. lê o frame em 320 px de largura;
+2. marca como "pássaro" todo pixel distante da cor do fundo (`SILHOUETTE_THRESHOLD`);
+3. dilata a máscara (`SILHOUETTE_DILATE`) e suaviza 1 px;
+4. aplica o resultado como segunda camada de `mask-image` da palavra (`mask-composite: intersect`), alinhada ao vídeo com a matemática do `object-fit: cover`.
+
+A máscara é atualizada a cada `timeupdate` (~4 Hz) até o fim do clipe, acompanhando o leve ajuste de cabeça após o pouso. Durante o voo, só o blend trabalha. Se a leitura de pixels for bloqueada, o blend continua sozinho.
+
+**Cor da página = cor da filmagem.** 1 px do canto superior direito do vídeo vira `--bg`; `--ghost` é essa cor × 0.955.
+
+**Thumbnails.** São recortes do próprio frame (`<canvas data-crop="x,y,size">`):
+
 - `x, y`: centro do recorte, em frações do frame;
-- `size`: lado do quadrado, em fração da largura do frame.
+- `size`: lado do quadrado, em fração da largura.
 
-`drawImage` funciona mesmo onde a leitura de pixels é bloqueada.
+**O hero nunca fica em branco.** A UI também aparece nos eventos `ended` e `error`, se `play()` falhar, e após 9 s. Pausar o vídeo também revela a UI.
 
-**A coreografia.** Todo elemento de UI do hero tem `.rv` (opacidade 0, `translateY(18px)`, `blur(6px)`). Quando `currentTime >= REVEAL_AT`, o hero ganha `.is-revealed` e os elementos entram com stagger de `--d × 90ms`.
+---
 
-**O hero nunca fica em branco.** A revelação também acontece:
-- nos eventos `ended` e `error` do vídeo;
-- se `play()` for rejeitado (por exemplo, autoplay bloqueado);
-- após um timeout fixo de 9s.
+## Acessibilidade
 
-Se a requisição com CORS falhar, o vídeo é recarregado sem `crossorigin`: as thumbnails continuam funcionando e só a amostragem de cor é perdida. Com `prefers-reduced-motion`, o vídeo pula direto para o último frame e tudo aparece sem transição.
+- **Pausar o vídeo:** o botão Pause / Play / Replay é visível desde o primeiro frame, fora da coreografia de reveal (WCAG 2.2.2).
+- **Movimento reduzido:** com `prefers-reduced-motion`, o vídeo pula para o último frame e transições, animações e smooth scroll são desligados. "Replay" ainda toca o filme, porque é uma ação do usuário.
+- **Contraste:** `--ink-3` é `#3E4C47`, com 4.9:1 sobre o fundo (AA). Os rótulos em painéis escuros passam de 5.5:1.
+- **Componentes:** abas WAI-ARIA com teclado, FAQ em `<details>` nativo, modal em `<dialog>` com foco gerenciado pelo navegador, e confirmação de cópia anunciada em `aria-live`.
 
 ---
 
 ## Ajustes comuns
 
-### Mudar o momento do pouso (`REVEAL_AT`)
+### `REVEAL_AT`
 
-Em [`src/config.js`](src/config.js):
-
-```js
-export const REVEAL_AT = 4.3;
-```
-
-O valor `4.3` foi medido nesta filmagem: o galho entra em quadro por volta de 4.0s e o pássaro está pousado em ~4.3s. Para descobrir o valor de outro clipe, pause no frame do pouso e rode no console:
+Em [`src/config.js`](src/config.js). O valor `4.3` foi medido nesta filmagem. Para outro clipe, pause no pouso e rode no console:
 
 ```js
 document.querySelector('[data-hero-video]').currentTime
@@ -133,40 +144,25 @@ document.querySelector('[data-hero-video]').currentTime
 
 ### Trocar o vídeo
 
-1. Altere `VIDEO_SRC` em `src/config.js`. O servidor precisa enviar CORS para a amostragem de cor funcionar; sem CORS a página ainda funciona, com as cores padrão.
+1. Substitua `assets/media/hero.mp4` ou altere `VIDEO_SRC`.
 2. Ajuste `REVEAL_AT`.
-3. Se o fundo da nova filmagem não for liso no canto superior direito, ajuste `BACKDROP_SAMPLE`.
-4. Ajuste os recortes `crop` dos cards em `src/data/content.js`.
+3. Ajuste `BACKDROP_SAMPLE` se o canto superior direito não for fundo liso.
+4. Ajuste os `crop` dos cards em `src/data/content.js`.
+5. Se a silhueta pegar fundo demais, ou de menos, ajuste `SILHOUETTE_THRESHOLD`.
 
-### Editar textos
-
-Todo o texto está em [`src/data/content.js`](src/data/content.js). Campos terminados em `Html` aceitam markup inline (como `<em>` para o itálico).
+Se o vídeo vier de outro domínio, ele precisa enviar CORS. Sem CORS, a página funciona, mas sem casar a cor e sem a correção da silhueta.
 
 ### Adicionar um componente
 
-1. Crie `src/components/MeuComponente/MeuComponente.js`, exportando uma função `props → string` (use a tag `html` de `lib/dom.js`).
-2. Crie `MeuComponente.css` com classes prefixadas pelo nome do bloco.
-3. Adicione o `@import` em `src/styles/main.css`.
-4. Se ele tiver comportamento, crie um controller em `src/controllers/` e inicialize em `main.js`.
-
-> A tag `html` insere valores sem escapar, porque todo o conteúdo aqui é estático e confiável. Se algum dia vier conteúdo de usuário ou de uma API, escape antes.
+1. Crie `src/components/Nome/Nome.js` (função `props → string`, com a tag `html`) e `Nome.css`.
+2. Adicione o `@import` em `src/styles/main.css`.
+3. Se tiver comportamento, crie o controller e inicialize-o em `main.js`.
+4. Rode `npm run check`.
 
 ---
 
-## Responsivo
+## Pendências conhecidas
 
-- **≤ 900px:** some com os links da nav e o SIGN IN; a palavra gigante vai para 22vw; o hero vira coluna, com o texto e os cards descendo abaixo do pássaro; o card 2 perde o deslocamento; o bento vira uma coluna e as estatísticas viram 2×2. O gutter lateral é de 16px e não há scroll horizontal.
-- **≤ 520px:** ajustes finos de tamanho em notas e estatísticas.
-
-## Compatibilidade
-
-Navegadores evergreen (Chrome, Edge, Firefox, Safari 16+). Recursos usados: ES modules, `mix-blend-mode`, `mask-image`, `color-mix()`, unidades `svh`, `IntersectionObserver`. `requestVideoFrameCallback` é usado quando disponível, para um reveal exato no frame, com `timeupdate` como alternativa.
-
-## Por que sem build?
-
-Era um requisito do projeto, e ES modules nativos já dão a organização em módulos. Para migrar para [Vite](https://vitejs.dev) no futuro:
-1. Rode `npm create vite@latest` (template `vanilla`).
-2. Mova `src/` e `index.html`.
-3. Troque os `@import` do CSS por `import './Nome.css'` em cada componente.
-
-O resto do código funciona como está.
+- **Formatos de vídeo mais leves (WebM / AV1):** exigem ffmpeg para transcodificar. Quando houver, gere os arquivos em `assets/media/` e troque o `src` do vídeo por elementos `<source>`. Atenção: com `<source>`, o evento `error` dispara no `<source>`, não no `<video>`, então ajuste o `onError` da coreografia.
+- **Poster:** não incluído de propósito. O primeiro frame é só o fundo liso, que o `background: var(--bg)` do vídeo já reproduz.
+- **Conteúdo:** estúdios, depoimentos e preços são placeholders de um produto fictício.

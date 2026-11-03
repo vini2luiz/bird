@@ -6,7 +6,7 @@
   color: var(--ink-2);
 }
 .hero-copy__eyebrow::before {
-  content: "";
+  content: '';
   width: 28px;
   height: 1px;
   background: currentColor;
@@ -17,15 +17,18 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(44px, 5vw, 76px);
-  line-height: .95;
-  letter-spacing: -.012em;
+  line-height: 0.95;
+  letter-spacing: -0.012em;
   color: var(--ink);
 }
-.hero-copy__title em { font-style: italic; color: var(--teal); }
+.hero-copy__title em {
+  font-style: italic;
+  color: var(--teal);
+}
 
 .hero-copy__lede {
   margin: 22px 0 30px;
-  max-width: 400px;
+  max-width: 380px; /* keeps the lede clear of the twig and the bird's tail */
   font-size: 15px;
   line-height: 1.6;
   color: var(--ink-2);

@@ -5,15 +5,15 @@
   transform: translateY(18px);
   filter: blur(6px);
   transition:
-    opacity .4s var(--ease),
-    transform .4s var(--ease),
-    filter .4s var(--ease);
+    opacity 0.4s var(--ease),
+    transform 0.4s var(--ease),
+    filter 0.4s var(--ease);
 }
 .is-revealed .rv {
   opacity: 1;
   transform: none;
   filter: none; /* `none`, not blur(0): a filtered ancestor would break the replay pill's backdrop-filter */
-  transition-duration: .9s;
+  transition-duration: 0.9s;
   transition-delay: calc(var(--d, 0) * 90ms);
 }
 
@@ -21,19 +21,31 @@
 .io {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity .9s var(--ease), transform .9s var(--ease);
+  transition:
+    opacity 0.9s var(--ease),
+    transform 0.9s var(--ease);
   transition-delay: calc(var(--i, 0) * 90ms);
 }
-.io.is-in { opacity: 1; transform: none; }
+.io.is-in {
+  opacity: 1;
+  transform: none;
+}
 
 /* Self-drawing SVG paths: pathLength="1" lets one rule drive every curve */
 .draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  transition: stroke-dashoffset 1.8s var(--ease) .35s;
+  transition: stroke-dashoffset 1.8s var(--ease) 0.35s;
 }
-.is-in .draw { stroke-dashoffset: 0; }
+.is-in .draw {
+  stroke-dashoffset: 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .rv, .is-revealed .rv, .io, .draw { transition: none !important; }
+  .rv,
+  .is-revealed .rv,
+  .io,
+  .draw {
+    transition: none !important;
+  }
 }

@@ -1,27 +1,37 @@
 import { hasFrame } from './video.js';
 
 /**
- * Paints square crops of the current video frame into canvases.
- *
- * Each canvas declares its crop as data-crop="x,y,size":
- *   x, y — crop centre, as fractions of the frame
- *   size — side of the square, as a fraction of the frame width
- *
+ * Source rectangle for a square crop of a frame.
+ * @param {number} vw - frame width
+ * @param {number} vh - frame height
+ * @param {[number, number, number]} crop - [x, y, size]: x/y are the crop centre as fractions
+ *   of the frame, size is the side of the square as a fraction of the frame width
+ * @returns {{sx: number, sy: number, size: number}} clamped inside the frame
+ */
+export function computeCrop(vw, vh, [fx, fy, fs]) {
+  const size = Math.min(fs * vw, vw, vh);
+  return {
+    sx: clamp(fx * vw - size / 2, 0, vw - size),
+    sy: clamp(fy * vh - size / 2, 0, vh - size),
+    size,
+  };
+}
+
+/** "0.555,0.335,0.22" → [0.555, 0.335, 0.22] */
+export const parseCrop = (value) => value.split(',').map(Number);
+
+/**
+ * Paints each <canvas data-crop="x,y,size"> with its crop of the current video frame.
  * drawImage still works where pixel readback is blocked (file://), so this never needs CORS.
  * @returns {boolean} true if at least one canvas was painted
  */
 export function paintThumbnails(video, canvases) {
   if (!hasFrame(video)) return false;
-  const vw = video.videoWidth;
-  const vh = video.videoHeight;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   let painted = false;
 
   for (const canvas of canvases) {
-    const [fx, fy, fs] = canvas.dataset.crop.split(',').map(Number);
-    const s = Math.min(fs * vw, vw, vh);
-    const sx = clamp(fx * vw - s / 2, 0, vw - s);
-    const sy = clamp(fy * vh - s / 2, 0, vh - s);
+    const { sx, sy, size: s } = computeCrop(video.videoWidth, video.videoHeight, parseCrop(canvas.dataset.crop));
     const size = Math.max(1, Math.round((canvas.clientWidth || 180) * dpr));
     canvas.width = canvas.height = size;
     try {

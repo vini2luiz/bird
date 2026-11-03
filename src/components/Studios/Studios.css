@@ -1,0 +1,115 @@
+.studios__logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 40px;
+  margin: 0;
+  padding: 30px 4px;
+  list-style: none;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-2);
+}
+
+.studios__logo {
+  line-height: 1;
+}
+.studios__logo--serif {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 28px;
+}
+.studios__logo--serif-roman {
+  font-family: var(--serif);
+  font-size: 28px;
+  letter-spacing: -0.01em;
+}
+.studios__logo--mono {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+}
+.studios__logo--sans {
+  font-family: var(--sans);
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.studios__quotes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.studios__quote {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin: 0;
+  padding: 28px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.45);
+}
+.studios__quote blockquote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 25px;
+  line-height: 1.12;
+  color: var(--ink);
+}
+.studios__quote blockquote::before {
+  content: '“';
+  color: var(--orange);
+}
+.studios__quote blockquote::after {
+  content: '”';
+  color: var(--orange);
+}
+
+.studios__quote figcaption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+}
+.studios__quote figcaption strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.studios__quote figcaption .mono {
+  display: block;
+  margin-top: 3px;
+  font-size: 8.5px;
+  color: var(--ink-3);
+}
+
+.studios__avatar {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+.studios__avatar--teal {
+  background: radial-gradient(circle at 32% 30%, #5fb7be, var(--teal) 55%, #0a4f56);
+}
+.studios__avatar--orange {
+  background: radial-gradient(circle at 32% 30%, #ffd2a8, var(--orange-2) 45%, var(--orange));
+}
+.studios__avatar--ink {
+  background: radial-gradient(circle at 32% 30%, #4e5e58, var(--panel-2) 60%, var(--panel));
+}
+
+@media (max-width: 900px) {
+  .studios__logos {
+    justify-content: flex-start;
+  }
+  .studios__quotes {
+    grid-template-columns: 1fr;
+  }
+}

@@ -20,7 +20,10 @@ export const DiveArc = ({ figures = [] } = {}) => html`
     <circle cx="344" cy="200" r="3.5" fill="#E8732A"/>
     <text x="300" y="246">ENTRY</text>
   </svg>
-  ${figures.length > 0 && html`
+  ${
+    figures.length > 0 &&
+    html`
     <div class="dive__figures">
       ${figures.map((f) => html`<div><b>${f.value}</b><span class="mono">${f.label}</span></div>`)}
-    </div>`}`;
+    </div>`
+  }`;

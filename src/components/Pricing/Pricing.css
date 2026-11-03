@@ -1,0 +1,116 @@
+.pricing__tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.tier__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.tier__name {
+  margin: 0;
+  font-size: 10.5px;
+  color: var(--ink-2);
+}
+.tier__badge {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--orange);
+  color: var(--ink);
+  font-size: 8.5px;
+}
+
+.tier__price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 26px 0 6px;
+}
+.tier__amount {
+  font-family: var(--serif);
+  font-size: 68px;
+  line-height: 0.9;
+}
+.tier__period {
+  font-size: 9px;
+  color: var(--ink-3);
+}
+
+.tier__blurb {
+  margin: 0 0 24px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+
+.tier__features {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 32px;
+  padding: 22px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+.tier__features li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.tier__features svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--teal);
+}
+
+.tier__cta {
+  margin-top: auto;
+}
+.tier__cta .pill {
+  width: 100%;
+  padding-block: 14px;
+}
+
+/* Featured: dark panel */
+.tier--featured {
+  border-color: rgba(227, 232, 222, 0.06);
+  border-radius: 26px;
+  background: linear-gradient(170deg, var(--panel-2), var(--panel) 70%);
+  color: var(--paper);
+  box-shadow: var(--shadow-deep);
+}
+.tier--featured .tier__name {
+  color: var(--on-panel);
+}
+.tier--featured .tier__period {
+  color: var(--on-panel);
+}
+.tier--featured .tier__blurb {
+  color: rgba(227, 232, 222, 0.76);
+}
+.tier--featured .tier__features {
+  border-top-color: var(--on-panel-line);
+}
+.tier--featured .tier__features svg {
+  color: var(--orange-2);
+}
+
+@media (max-width: 900px) {
+  .pricing__tiers {
+    grid-template-columns: 1fr;
+  }
+}

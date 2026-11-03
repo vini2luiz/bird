@@ -1,0 +1,44 @@
+.media-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px 9px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(227, 232, 222, 0.32);
+  color: var(--ink-2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  cursor: pointer;
+  transition: background 0.3s var(--ease);
+  animation: media-toggle-in 0.8s var(--ease) 0.6s both;
+}
+.media-toggle:hover {
+  background: rgba(227, 232, 222, 0.55);
+}
+
+.media-toggle__icon {
+  display: none;
+  width: 13px;
+  height: 13px;
+}
+.media-toggle[data-state='pause'] .media-toggle__icon--pause,
+.media-toggle[data-state='play'] .media-toggle__icon--play,
+.media-toggle[data-state='replay'] .media-toggle__icon--replay {
+  display: block;
+}
+
+@keyframes media-toggle-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-toggle {
+    animation: none;
+  }
+}

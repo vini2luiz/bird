@@ -5,11 +5,15 @@
   min-width: 0;
   padding: 26px;
   border-radius: 22px;
-  background: rgba(255, 255, 255, .45);
+  background: rgba(255, 255, 255, 0.45);
   border: 1px solid var(--line);
 }
 
-.note__index { margin: 0 0 18px; font-size: 9.5px; color: var(--ink-3); }
+.note__index {
+  margin: 0 0 18px;
+  font-size: 9.5px;
+  color: var(--ink-3);
+}
 
 .note__title {
   margin: 0 0 12px;
@@ -18,36 +22,41 @@
   font-size: clamp(26px, 2.3vw, 34px);
   line-height: 1.02;
 }
-.note__title em { font-style: italic; }
-
-.note__body { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--ink-2); }
-
-.note__meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: auto 0 0;
-  padding-top: 22px;
-  font-size: 9px;
-  color: var(--ink-3);
+.note__title em {
+  font-style: italic;
 }
-.note__meta::before { content: ""; width: 18px; height: 1px; background: currentColor; }
+
+.note__body {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
 
 /* Dark: tall panel */
 .note--dark {
   grid-row: span 2;
   padding: 30px;
   border-radius: 26px;
-  border-color: rgba(227, 232, 222, .06);
+  border-color: rgba(227, 232, 222, 0.06);
   background: linear-gradient(165deg, var(--panel-2) 0%, var(--panel) 70%);
   color: var(--paper);
   box-shadow: var(--shadow-deep);
   overflow: hidden;
 }
-.note--dark .note__index { color: var(--on-panel); }
-.note--dark .note__title { font-size: clamp(32px, 3vw, 46px); }
-.note--dark .note__title em { color: var(--orange-2); }
-.note--dark .note__body { color: rgba(227, 232, 222, .72); max-width: 420px; }
+.note--dark .note__index {
+  color: var(--on-panel);
+}
+.note--dark .note__title {
+  font-size: clamp(32px, 3vw, 46px);
+}
+.note--dark .note__title em {
+  color: var(--orange-2);
+}
+.note--dark .note__body {
+  color: rgba(227, 232, 222, 0.72);
+  max-width: 420px;
+}
 
 /* Wide: spans two columns, visual beside the text */
 .note--wide {
@@ -56,13 +65,23 @@
   align-items: center;
   gap: 28px;
 }
-.note__text { flex: 1 1 auto; min-width: 0; }
+.note__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
 
 @media (max-width: 900px) {
-  .note--dark { grid-row: auto; }
-  .note--wide { grid-column: auto; }
+  .note--dark {
+    grid-row: auto;
+  }
+  .note--wide {
+    grid-column: auto;
+  }
 }
 
 @media (max-width: 520px) {
-  .note--wide { flex-direction: column; align-items: flex-start; }
+  .note--wide {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

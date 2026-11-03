@@ -1,10 +1,14 @@
 .closing {
+  padding: clamp(80px, 10vw, 140px) var(--gutter) 0;
+  background: var(--paper);
+}
+
+.closing__inner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 28px 40px;
-  margin-top: clamp(64px, 8vw, 110px);
   padding-top: 40px;
   border-top: 1px solid var(--line);
 }
@@ -16,4 +20,7 @@
   font-size: clamp(32px, 3.8vw, 56px);
   line-height: 1;
 }
-.closing__line em { font-style: italic; color: var(--teal); }
+.closing__line em {
+  font-style: italic;
+  color: var(--teal);
+}

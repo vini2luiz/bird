@@ -3,41 +3,47 @@
 
 /* Metric-adjusted local fallback so the condensed display serif degrades gracefully */
 @font-face {
-  font-family: "Display Serif Fallback";
-  src: local("Times New Roman"), local("TimesNewRomanPSMT"), local("Liberation Serif"), local("Georgia");
+  font-family: 'Display Serif Fallback';
+  src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Liberation Serif'), local('Georgia');
   size-adjust: 92%;
 }
 
 :root {
-  --bg: #B6C3B0;
-  --paper: #E3E8DE;
-  --ink: #10201F;
-  --ink-2: #2E3D3A;
-  --ink-3: #4E5E58;
-  --line: rgba(16, 32, 31, .14);
-  --ghost: #ADBAA7;
-  --orange: #E8732A;
-  --orange-2: #F3A15E;
-  --teal: #0E7C86;
-  --cobalt: #1F5FA8;
-  --panel: #0F1D1C;
-  --panel-2: #172A28;
-  --on-panel: rgba(227, 232, 222, .62);
-  --on-panel-line: rgba(227, 232, 222, .1);
+  --bg: #b6c3b0;
+  --paper: #e3e8de;
+  --ink: #10201f;
+  --ink-2: #2e3d3a;
+  --ink-3: #3e4c47; /* 4.9:1 on --bg (WCAG AA for small text) */
+  --line: rgba(16, 32, 31, 0.14);
+  --ghost: #adbaa7;
+  --orange: #e8732a;
+  --orange-2: #f3a15e;
+  --teal: #0e7c86;
+  --cobalt: #1f5fa8;
+  --panel: #0f1d1c;
+  --panel-2: #172a28;
+  --on-panel: rgba(227, 232, 222, 0.62);
+  --on-panel-line: rgba(227, 232, 222, 0.1);
 
-  --ease: cubic-bezier(.2, .7, .1, 1);
-  --serif: "Instrument Serif", "Display Serif Fallback", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
-  --sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --serif:
+    'Instrument Serif', 'Display Serif Fallback', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia,
+    'Times New Roman', serif;
+  --sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 
   --gutter: 40px;
-  --shadow-deep: 0 34px 70px -28px rgba(16, 32, 31, .6), 0 10px 24px -12px rgba(16, 32, 31, .45);
+  --shadow-deep: 0 34px 70px -28px rgba(16, 32, 31, 0.6), 0 10px 24px -12px rgba(16, 32, 31, 0.45);
 }
 
 @media (max-width: 1100px) {
-  :root { --gutter: 28px; }
+  :root {
+    --gutter: 28px;
+  }
 }
 
 @media (max-width: 900px) {
-  :root { --gutter: 16px; }
+  :root {
+    --gutter: 16px;
+  }
 }

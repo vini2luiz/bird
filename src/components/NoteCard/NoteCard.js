@@ -19,6 +19,3 @@ export function NoteCard({ variant = 'light', index, titleHtml, body, visual = '
       ${visual}
     </article>`;
 }
-
-/** Small mono footer line with a leading rule. */
-export const NoteMeta = ({ label }) => html`<p class="note__meta mono">${label}</p>`;

@@ -18,32 +18,65 @@
 }
 
 /* The trick: darken keeps the darker of word and footage at every pixel.
-   The bird is darker than the word everywhere, so it appears to fly in front of the type. */
+   The bird is darker than the word almost everywhere, so it appears to fly in front of the type. */
 .hero__word {
+  --word-fade: linear-gradient(180deg, #000 0%, #000 38%, rgba(0, 0, 0, 0.35) 62%, transparent 86%);
   position: absolute;
   left: 0;
   right: 0;
   top: 13vh;
   z-index: 1;
   margin: 0;
-  padding-bottom: .06em;
+  padding-bottom: 0.06em;
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(90px, 17vw, 300px);
   line-height: 1;
-  letter-spacing: -.02em;
+  letter-spacing: -0.02em;
   text-align: center;
   white-space: nowrap;
   color: var(--ghost);
   mix-blend-mode: darken;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0,0,0,.35) 62%, transparent 86%);
-          mask-image: linear-gradient(180deg, #000 0%, #000 38%, rgba(0,0,0,.35) 62%, transparent 86%);
+  -webkit-mask-image: var(--word-fade);
+  mask-image: var(--word-fade);
   pointer-events: none;
   user-select: none;
   animation: hero-ghost-in 1.6s var(--ease) both;
 }
-.hero__word em { font-style: italic; }
-@keyframes hero-ghost-in { from { opacity: 0; } to { opacity: 1; } }
+.hero__word em {
+  font-style: italic;
+}
+@keyframes hero-ghost-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Where the perched bird is lighter than the word (its white cheek), darken alone lets the word through.
+   controllers/ghostWordMask.js supplies the bird's silhouette; intersecting it with the fade cuts it out. */
+.hero__word.has-silhouette {
+  -webkit-mask-image: var(--silhouette), var(--word-fade);
+  -webkit-mask-position:
+    var(--silhouette-pos),
+    0 0;
+  -webkit-mask-size:
+    var(--silhouette-size),
+    100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-composite: source-in;
+  mask-image: var(--silhouette), var(--word-fade);
+  mask-position:
+    var(--silhouette-pos),
+    0 0;
+  mask-size:
+    var(--silhouette-size),
+    100% 100%;
+  mask-repeat: no-repeat;
+  mask-composite: intersect;
+}
 
 .hero__veil {
   position: absolute;
@@ -51,12 +84,23 @@
   z-index: 2;
   pointer-events: none;
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--bg) 70%, transparent) 0%, transparent 38%),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bg) 88%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 62%, transparent) 24%,
+      transparent 44%
+    ),
     linear-gradient(180deg, transparent 55%, var(--bg) 100%);
 }
 
 /* Slots: where the hero places its children */
-.hero__nav { position: absolute; top: 0; left: 0; right: 0; z-index: 4; }
+.hero__nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+}
 
 .hero__copy {
   position: absolute;
@@ -75,7 +119,20 @@
   width: min(400px, 34vw);
 }
 
-.hero__strip { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; }
+.hero__strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+}
+
+.hero__media {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 16px;
+  z-index: 5;
+}
 
 @media (max-width: 900px) {
   .hero {
@@ -86,21 +143,47 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
-    padding: max(46svh, calc(var(--stage) * .74)) var(--gutter) 0;
+    padding: max(46svh, calc(var(--stage) * 0.74)) var(--gutter) 0;
   }
-  .hero__video { bottom: auto; height: var(--stage); object-position: 54% 50%; }
-  .hero__word { font-size: 22vw; }
+  .hero__video {
+    bottom: auto;
+    height: var(--stage);
+    object-position: 54% 50%;
+  }
+  .hero__word {
+    font-size: 22vw;
+  }
   .hero__veil {
     bottom: auto;
     height: var(--stage);
-    background: linear-gradient(0deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 60%, transparent) 22%, transparent 42%);
+    background: linear-gradient(
+      0deg,
+      var(--bg) 0%,
+      color-mix(in srgb, var(--bg) 60%, transparent) 22%,
+      transparent 42%
+    );
   }
-  .hero__copy, .hero__cluster, .hero__strip { position: relative; inset: auto; transform: none; }
-  .hero__copy { max-width: 520px; }
-  .hero__cluster { width: 100%; max-width: 520px; }
-  .hero__strip { margin: auto calc(-1 * var(--gutter)) 0; }
+  .hero__copy,
+  .hero__cluster,
+  .hero__strip {
+    position: relative;
+    inset: auto;
+    transform: none;
+  }
+  .hero__copy {
+    max-width: 520px;
+  }
+  .hero__cluster {
+    width: 100%;
+    max-width: 520px;
+  }
+  .hero__strip {
+    margin: auto calc(-1 * var(--gutter)) 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__word { animation: none; }
+  .hero__word {
+    animation: none;
+  }
 }

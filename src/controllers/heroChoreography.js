@@ -12,8 +12,8 @@ import { paintThumbnails, clearThumbnails } from '../lib/thumbnails.js';
  * @param {object} options
  * @param {HTMLElement} options.hero
  * @param {HTMLVideoElement} options.video
- * @param {HTMLButtonElement} [options.replayButton]
  * @param {HTMLCanvasElement[]} options.thumbnails - canvases with data-crop
+ * @param {{update: Function, clear: Function}} [options.mask] - ghost-word cut-out (ghostWordMask.js)
  * @param {number} options.revealAt - seconds into the clip when the bird lands
  * @param {number} options.timeoutMs - hard fallback before revealing regardless
  * @param {{x: number, y: number}} options.backdropSample - where to read the backdrop colour
@@ -24,8 +24,8 @@ import { paintThumbnails, clearThumbnails } from '../lib/thumbnails.js';
 export function initHeroChoreography({
   hero,
   video,
-  replayButton,
   thumbnails,
+  mask,
   revealAt,
   timeoutMs,
   backdropSample,
@@ -35,7 +35,9 @@ export function initHeroChoreography({
   const state = {
     started: false,
     revealed: false,
+    landed: false,
     painted: false,
+    backdrop: null,
     backdropDone: false,
     retriedWithoutCors: false,
     failsafe: 0,
@@ -53,6 +55,7 @@ export function initHeroChoreography({
     }
     if (isNearBlack(rgb)) return; // black lead-in frame: try again on the next timeupdate
     applyBackdrop(rgb, ghostFactor);
+    state.backdrop = rgb;
     state.backdropDone = true;
   }
 
@@ -67,14 +70,15 @@ export function initHeroChoreography({
     state.revealed = true;
     clearTimeout(state.failsafe);
     hero.classList.add('is-revealed');
-    // Only crop the frame once the bird is actually on the twig
-    if (video.currentTime >= revealAt || video.ended) paint();
   }
 
+  /** The bird is on the twig: reveal, crop the thumbnails, and keep the word's cut-out in step. */
   function onLanded() {
     if (video.seeking) return;
+    state.landed = true;
     reveal();
     if (!state.painted) paint();
+    mask?.update(state.backdrop);
   }
 
   function armFailsafe() {
@@ -107,7 +111,15 @@ export function initHeroChoreography({
   function jumpToLastFrame() {
     const seekToEnd = () => {
       video.pause();
-      video.addEventListener('seeked', () => { syncBackdrop(); onLanded(); paint(); }, { once: true });
+      video.addEventListener(
+        'seeked',
+        () => {
+          syncBackdrop();
+          onLanded();
+          paint();
+        },
+        { once: true },
+      );
       video.currentTime = Math.max(0, video.duration - 0.05);
     };
     if (Number.isFinite(video.duration)) seekToEnd();
@@ -138,16 +150,18 @@ export function initHeroChoreography({
     reveal();
   }
 
+  /** Restart the film. User-initiated, so it plays even with reduced motion (transitions stay off). */
   function replay() {
     state.revealed = false;
+    state.landed = false;
     state.painted = false;
     hero.classList.remove('is-revealed');
     clearThumbnails(thumbnails);
-    try { video.currentTime = 0; } catch { /* not seekable yet */ }
-    if (reducedMotion) {
-      reveal();
-      jumpToLastFrame();
-      return;
+    mask?.clear();
+    try {
+      video.currentTime = 0;
+    } catch {
+      /* not seekable yet */
     }
     play();
     armFailsafe();
@@ -160,9 +174,12 @@ export function initHeroChoreography({
     syncBackdrop();
     if (video.currentTime >= revealAt) onLanded();
   });
-  video.addEventListener('ended', () => { reveal(); paint(); });
+  video.addEventListener('ended', () => {
+    reveal();
+    paint();
+    mask?.update(state.backdrop);
+  });
   video.addEventListener('error', onError);
-  replayButton?.addEventListener('click', replay);
 
   armFailsafe();
   if (video.readyState >= 2) start(); // loadeddata may already have fired

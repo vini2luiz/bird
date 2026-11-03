@@ -13,9 +13,13 @@
   justify-self: start;
   font-weight: 700;
   font-size: 13px;
-  letter-spacing: .22em;
+  letter-spacing: 0.22em;
 }
-.nav__brand .bird-mark { width: 26px; height: 26px; flex: none; }
+.nav__brand .bird-mark {
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
 
 .nav__links {
   display: flex;
@@ -26,13 +30,17 @@
   color: var(--ink-2);
 }
 .nav__links li + li::before {
-  content: "·";
+  content: '·';
   margin: 0 14px;
   color: var(--ink-3);
-  opacity: .7;
+  opacity: 0.7;
 }
-.nav__links a { transition: color .3s var(--ease); }
-.nav__links a:hover { color: var(--ink); }
+.nav__links a {
+  transition: color 0.3s var(--ease);
+}
+.nav__links a:hover {
+  color: var(--ink);
+}
 
 .nav__end {
   justify-self: end;
@@ -43,11 +51,17 @@
 .nav__signin {
   font-size: 11.5px;
   font-weight: 700;
-  letter-spacing: .14em;
+  letter-spacing: 0.14em;
   color: var(--ink-2);
 }
 
 @media (max-width: 900px) {
-  .nav { padding: 18px var(--gutter); grid-template-columns: 1fr auto; }
-  .nav__links, .nav__signin { display: none; }
+  .nav {
+    padding: 18px var(--gutter);
+    grid-template-columns: 1fr auto;
+  }
+  .nav__links,
+  .nav__signin {
+    display: none;
+  }
 }

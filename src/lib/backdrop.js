@@ -23,13 +23,17 @@ export function readPixel(video, { x, y }) {
 /** A black lead-in frame is not the backdrop — callers should sample again later. */
 export const isNearBlack = ([r, g, b]) => r + g + b < 24;
 
+/** The ghost word's colour: the backdrop scaled by `factor`, just dark enough to read. */
+export const ghostOf = (rgb, factor) => rgb.map((channel) => Math.round(channel * factor));
+
 /**
  * Writes the sampled colour to --bg and a slightly darker --ghost,
  * so the page and the footage share one continuous backdrop.
  */
-export function applyBackdrop([r, g, b], ghostFactor, root = document.documentElement) {
-  const k = ghostFactor;
+export function applyBackdrop(rgb, ghostFactor, root = document.documentElement) {
+  const [r, g, b] = rgb;
+  const [gr, gg, gb] = ghostOf(rgb, ghostFactor);
   root.style.setProperty('--bg', `rgb(${r} ${g} ${b})`);
-  root.style.setProperty('--ghost', `rgb(${Math.round(r * k)} ${Math.round(g * k)} ${Math.round(b * k)})`);
+  root.style.setProperty('--ghost', `rgb(${gr} ${gg} ${gb})`);
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', `rgb(${r}, ${g}, ${b})`);
 }

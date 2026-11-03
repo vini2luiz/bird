@@ -4,11 +4,33 @@
   align-items: center;
   gap: 16px;
   padding: 18px var(--gutter) 22px;
-  border-top: 1px solid var(--line);
   color: var(--ink-2);
 }
 
-.species-strip__species { display: flex; align-items: baseline; gap: 12px; }
+/* Hairline that breaks in the middle, so it never cuts across the bird's tail */
+.species-strip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--line) 0%,
+    var(--line) 26%,
+    transparent 38%,
+    transparent 62%,
+    var(--line) 74%,
+    var(--line) 100%
+  );
+}
+
+.species-strip__species {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
 .species-strip__species em {
   font-family: var(--serif);
   font-style: italic;
@@ -18,24 +40,9 @@
   color: var(--ink);
 }
 
-.species-strip__geo { text-align: center; }
-
-.species-strip__replay {
-  justify-self: end;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 9px 16px 9px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, .45);
-  background: rgba(227, 232, 222, .32);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-          backdrop-filter: blur(14px) saturate(1.2);
-  cursor: pointer;
-  transition: background .3s var(--ease);
+.species-strip__geo {
+  text-align: center;
 }
-.species-strip__replay:hover { background: rgba(227, 232, 222, .55); }
-.species-strip__replay svg { width: 13px; height: 13px; }
 
 @media (max-width: 900px) {
   .species-strip {
@@ -43,5 +50,12 @@
     row-gap: 10px;
     padding: 18px var(--gutter) 20px;
   }
-  .species-strip__geo { grid-column: 1 / -1; grid-row: 2; text-align: left; }
+  .species-strip::before {
+    background: var(--line);
+  }
+  .species-strip__geo {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    text-align: left;
+  }
 }
